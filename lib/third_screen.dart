@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' as m;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'home_provider.dart';
 
 class ThirdScreen extends StatefulWidget {
   const ThirdScreen({super.key});
@@ -18,7 +20,10 @@ class _ThirdScreenState extends State<ThirdScreen> {
     return NavigationView(
       content: ScaffoldPage(
         header: const PageHeader(
-          title: Text("This is Second Screen"),
+          title: Text("This is Third Screen"),
+          /*leading: IconButton(icon: const Icon(FluentIcons.back), onPressed: (){
+            Navigator.pop(context);
+          })*/
         ),
         content: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -40,22 +45,27 @@ class _ThirdScreenState extends State<ThirdScreen> {
                     });
                   },
                 );
-              }
-          ),
+              }),
         ),
-        bottomBar: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              FilledButton(
-                child: const Text('Back'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+        bottomBar:Consumer(
+          builder: (context, ref, child) {
+            bool isNavigationMode = ref.watch(isNavigationModeProvider);
+            return isNavigationMode
+                ? const SizedBox.shrink()
+                : Padding(
+              padding: const EdgeInsets.all(24),
+              child: Row(
+                children: [
+                  FilledButton(
+                    child: const Text('Back'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

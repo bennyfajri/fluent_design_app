@@ -1,8 +1,8 @@
-
-
+import 'package:fluent_design_app/home_provider.dart';
 import 'package:fluent_design_app/second_screen.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FirstScreen extends StatelessWidget {
   const FirstScreen({super.key});
@@ -11,11 +11,11 @@ class FirstScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return NavigationView(
       content: ScaffoldPage(
-        header: PageHeader(
+        header: const PageHeader(
           title: Text("This is First Screen"),
         ),
         content: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             children: [
               const Text(
@@ -29,7 +29,7 @@ class FirstScreen extends StatelessWidget {
                     onPressed: () {},
                   ),
                   m.TextButton(
-                    child: Text('TEXT BUTTON'),
+                    child: const Text('Text Button'),
                     onPressed: () {
                       print('pressed text button');
                     },
@@ -43,24 +43,29 @@ class FirstScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomBar: Padding(
-          padding: EdgeInsets.all(24),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              FilledButton(
-                child: const Text('Next Screen'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    m.MaterialPageRoute(
-                      builder: (context) => const SecondScreen(),
-                    ),
-                  );
-                },
-              )
-            ],
-          ),
+        bottomBar: Consumer(
+          builder: (context, ref, child) {
+            bool isNavigationMode = ref.watch(isNavigationModeProvider);
+            return isNavigationMode ? const SizedBox.shrink() :  Padding(
+              padding: const EdgeInsets.all(24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FilledButton(
+                    child: const Text('Next Screen'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        FluentPageRoute(
+                          builder: (context) => const SecondScreen(),
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ),
+            );
+          }
         ),
       ),
     );
